@@ -32,7 +32,7 @@
 				'months'   : '1-12',
 				'monthdays': '1-31',
 				'weekdays' : '1-5',
-				'hours'    : '00:00-23:59'
+				'hours'    : '09:00-18:00'
 			}
 		},
 
@@ -58,7 +58,6 @@
 			this.node.offset({top:0, left:0});
 
 			for(var i in this.options['inputs'])
-				//this.onChange(i); 
 				this._fieldInit(i);
 
 			var _this = this;
@@ -76,12 +75,12 @@
 					offset['top']  += _this.element.outerHeight();
 					_this.node.offset(offset);
 				}
-
-				
 			});
 
+			
 			// on title bar
 			this.node.children().first().bind('click', function() { _this.node.hide(); });
+			//this.node.toggle()
 		},
 
 		destroy: function() {
@@ -95,26 +94,12 @@
 			node.find('#title').html(this._i18n['title']);
 
 			// months
-			var ul = node.find('ul#months');
-			ul.prev().html(this._i18n['months']);
+			var months = node.find('div#months');
+			months.prev().html(this._i18n['months']);
 
-			for(var i = 0; i < 12; i++) {
-				li = $('<li class="AnyTime-btn AnyTime-mon-btn AnyTime-mon2-btn ui-state-default ui-state-highlight">' + 
-					this._i18n['mAbbr'][i] + '</li>')
-
-					li.click(function() { 
-					$(this).toggleClass('ui-state-highlight'); 
-					widget.onChange('months');
-				});
-
-				ul.append(li);
-			}
-
-			// months :: all button
-			var li = $('<li class="AnyTime-btn AnyTime-mon-btn AnyTime-mon2-btn ui-state-default ui-state-disabled" state="none">'+this._i18n['none']+'</li>');
-			li.click(function() {
+			months.find('div[type="wildcard"]').html(widget._i18n['none']).click(function() {
 				var state = $(this).attr('state');
-				ul.children().each(function(idx,elt) {
+				months.children('div[type="data"]').each(function(idx,elt) {
 					if(state == 'none')
 						$(elt).removeClass('ui-state-highlight');
 					else
@@ -124,64 +109,57 @@
 				state = state=='none'?'all':'none';
 				$(this).attr('state', state).html(widget._i18n[state]);
 				widget.onChange('months');
-			}); 
-			ul.append(li);
+			});
+
+			var block = months.children().first();
+			for(var i = 0; i < 12; i++) {
+				var item = $('<div type="data">' + this._i18n['mAbbr'][i] + '</div>');
+
+				item.click(function() { 
+					$(this).toggleClass('ui-state-highlight'); 
+					widget.onChange('months');
+				});
+
+				block.before(item);
+			}
 
 			// monthdays
-			node.find('#md-title').html(this._i18n['monthdays']);
-			node.find('#monthdays').children().each(function(index, elt) {
-				var i = 1 + index*7;
+			var mdays = node.find('div#monthdays');
+			mdays.prev().html(this._i18n['monthdays']);
 
-				for(var j = i; j < i+7; j++) {
-					var td = $('<td class="AnyTime-btn AnyTime-dom-btn AnyTime-dom-btn-filled ui-state-default ui-state-highlight">' + j + '</td>');
+			mdays.find('div[type="wildcard"]').html(widget._i18n['all']).click(function() {
+				var state = $(this).attr('state');
+				mdays.children('div[type="data"]').each(function(idx,elt) {
+					if(state == 'none')
+						$(elt).removeClass('ui-state-highlight');
+					else
+						$(elt).addClass('ui-state-highlight');
+				});
 
-					if(j > 31) {
-						td.addClass('ui-state-disabled').empty();
+				state = state=='none'?'all':'none';
+				$(this).attr('state', state).html(widget._i18n[state]);
+				widget.onChange('monthdays');
+			}); 
 
-						// all/none button
-						if(j == 35)
-						{ 
-							td.html(widget._i18n['none']).attr('state','none'); 
-							td.click(function() {
-								var state = $(this).attr('state');
-								node.find('#monthdays td:not(.ui-state-disabled)').each(function(idx,elt) {
-									if(state == 'none')
-										$(elt).removeClass('ui-state-highlight');
-									else
-										$(elt).addClass('ui-state-highlight');
-								});
+			var block = mdays.children().first()
+			for(var i = 1; i < 32; i++) {
+				var item = $('<div type="data">' + i + '</div>');
+				
+				item.click(function() { 
+					$(this).toggleClass('ui-state-highlight'); 
+					widget.onChange('monthdays');
+				});
 
-								state = state=='none'?'all':'none';
-								$(this).attr('state', state).html(widget._i18n[state]);
-								widget.onChange('months');
-							}); 
-						}
-					}
-
-					td.click(function() { 
-						$(this).toggleClass('ui-state-highlight'); 
-						widget.onChange('monthdays');
-					});
-					$(elt).append(td);
-				}
-			});
+				block.before(item);
+			}
 
 			// weekdays
 			var wdays = node.find('#weekdays');
 			wdays.prev().html(this._i18n['weekdays']);
 
-			wdays.children().each(function(idx, elt) {
-				$(elt).click(function() { 
-					$(this).toggleClass('ui-state-highlight'); 
-					widget.onChange('weekdays');
-				});
-				$(elt).html(widget._i18n['dAbbr'][idx]);
-
-			});
-
-			node.find('#weekdays-all').html(widget._i18n['all']).click(function() {
+			wdays.find('div[type="wildcard"]').html(widget._i18n['all']).click(function() {
 				var state = $(this).attr('state');
-				wdays.children().each(function(idx,elt) {
+				wdays.children('div[type="data"]').each(function(idx,elt) {
 					if(state == 'none')
 						$(elt).removeClass('ui-state-highlight');
 					else
@@ -193,6 +171,18 @@
 				widget.onChange('weekdays');
 			}); 
 
+			var block = wdays.children().first();
+			for(var i = 0; i < 7; i++) {
+				item = $('<div type="data">' + this._i18n['dAbbr'][i] + '</div>')
+
+				item.click(function() { 
+					$(this).toggleClass('ui-state-highlight'); 
+					widget.onChange('weekdays');
+				});
+
+				block.before(item);
+			}
+
 			// hours
 			var slider = node.find('#slider');
 			slider.prev().html(widget._i18n['hours']);
@@ -203,28 +193,30 @@
 				else
 					{ id  = 'range-start'; lbl = '00:00'; }
 
-				var span = $('<span id="'+id+'" class="ui-slider-tooltip ui-widget-content ui-corner-all" style="position: relative; left: 20px;" iso-hour="'+lbl+'">'+lbl+'</span>');
+				var span = $('<span id="'+id+'" class="ui-slider-tooltip ui-widget-content ui-corner-all" iso-hour="'+lbl+'">'+lbl+'</span>');
 				$(elt).css('color','transparent');
 				$(elt).append(span);
 
-				$(elt).mousewheel(function(e, d, dX, dY) {
-					value = slider.slider('values')[idx];
-					slider.slider('values', idx, value + dY);
-				});
+				//NOTE: mousewheel is facultative
+				if(jQuery.isFunction($(elt).mousewheel)) {
+					$(elt).mousewheel(function(e, d, dX, dY) {
+						value = slider.slider('values')[idx];
+						slider.slider('values', idx, value + dY);
+					});
+				};
 			});
 
 			onSlide = function(e, ui) {
 				var positions = ['start','end'];
 				for(var i in positions)
 				{
-					var val = ui.values[i];
+					var val  = ui.values[i];
 					var hour = Math.floor(val/60);
 					var min  = (val-(60 * hour));
 
 					hour = hour < 10?'0'+hour:hour;
 					min  = min  < 10?'0'+min:min;
 
-					//$('#range-'+positions[i]).html(hour+':'+min).attr('iso-hour', hour+':'+min);
 					node.find('#range-'+positions[i]).html(hour+':'+min).attr('iso-hour', hour+':'+min);
 				}
 
@@ -288,7 +280,7 @@
 
 			clbks = {
 				'months'   : "_clbk1(this.node.find('#months').children())",
-				'monthdays': "_clbk1(this.node.find('#monthdays').find('td'))",
+				'monthdays': "_clbk1(this.node.find('#monthdays').children())",
 				'weekdays' : "_clbk1(this.node.find('#weekdays').children())",
 				'hours'    : "_clbk2()",
 			}
@@ -316,7 +308,7 @@
 				}
 				txt = txt.substr(0, txt.length - 2);
 			} else {
-				txt += ', Aucun jours de la semaine';
+				txt += ', ' + this._i18n['fullText'][4];
 			}
 			txt += ', ...';
 
@@ -339,7 +331,7 @@
 			if(item == 'hours')	{
 				value = jQuery.map(value.split('-'), function(elt) {
 					hm = elt.split(':');
-					// parseInt('09') => octal == 0
+					// parseInt('09') => octal == 0, so we must remove preceding zero
 					if(hm[0][0] == '0')
 						hm[0] = hm[0][1];
 					if(hm[1][0] == '0')
@@ -366,20 +358,22 @@
 
 				value = value.sort(function(a,b) { return a-b; });
 
-				var elts = this.node.find('#'+item);
-				elts = item=='monthdays'?elts.find('td'):elts.children();
-
-				var i = 0;
+				var elts = this.node.find('#'+item).children('[type="data"]');
+				var i    = 0;
+				var wildcard  = 'none';
 				elts.each(function (idx, elt) {
 					if(value[i] == idx+1)
 						{ $(elt).addClass('ui-state-highlight'); i++; }
 					else
-						{ $(elt).removeClass('ui-state-highlight'); }
+						{ $(elt).removeClass('ui-state-highlight'); wildcard = 'all'; }
 				})
+
+				this.node.find('#'+item).children('[type="wildcard"]').html(this._i18n[wildcard]).attr('state',wildcard);
 			}
 
 			this.onChange(item);
 		},
+
 
 		_l10n: {'en': {
 			'title'    : 'Schedule',
@@ -393,69 +387,52 @@
 			'dAbbr': ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
 			'mAbbr': ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
 			
-			'fullText': ['', 'to', '', 'to']
+			'fullText': ['', 'to', '', 'to', 'No week days']
 		}},
 
 		_html: '\
-			<div class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" style="width: 270px; position: absolute;">\
+			<div class="schedulebox ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">\
 				<div class="ui-datetimepicker-header ui-widget-header ui-helper-clearfix ui-corner-all">\
 					<div class="ui-datetime-title " style="text-align: center">\
 						<span id="title">Set your schedule</span>\
-					<span class="ui-icon ui-icon-circle-close" style="float:right"></span>\
+						<span class="ui-icon ui-icon-circle-close" style="float:right"></span>\
 					</div>\
 				</div>\
-					<div style="width: 600px" class="AnyTime-pkr">\
+				<div class="mainbox">\
 \
-						<div style="width: 188px; height: 237px;" class="AnyTime-date">\
-							<h6 class="AnyTime-lbl AnyTime-lbl-month" style="">Months</h6>\
-							<ul id="months" class="AnyTime-mons"></ul>\
-\
-							<h6 id="md-title" class="AnyTime-lbl AnyTime-lbl-dom">Days of Month</h6>\
-							<table cellspacing="0" cellpadding="0" border="0" class="AnyTime-dom-table">\
-							<tbody id="monthdays" class="AnyTime-dom-body">\
-								<tr class="AnyTime-wk AnyTime-wk1"></tr>\
-								<tr class="AnyTime-wk AnyTime-wk2"></tr>\
-								<tr class="AnyTime-wk AnyTime-wk3"></tr>\
-								<tr class="AnyTime-wk AnyTime-wk4"></tr>\
-								<tr class="AnyTime-wk AnyTime-wk5"></tr>\
-							</tbody>\
-							</table>\
-\
-							<h6 class="AnyTime-lbl AnyTime-lbl-month" style="">Days of week</h6>\
-							<ul id="weekdays" class="AnyTime-mons">\
-								<li class="AnyTime-btn AnyTime-mon-btn AnyTime-mon1-btn ui-state-default ui-state-highlight">Mon\
-								</li>\
-								<li class="AnyTime-btn AnyTime-mon-btn AnyTime-mon2-btn ui-state-default ui-state-highlight">Tue\
-								</li>\
-								<li class="AnyTime-btn AnyTime-mon-btn AnyTime-mon3-btn ui-state-default ui-state-highlight">Wed\
-								</li>\
-								<li class="AnyTime-btn AnyTime-mon-btn AnyTime-mon4-btn ui-state-default ui-state-highlight">Thu\
-								</li>\
-								<li class="AnyTime-btn AnyTime-mon-btn AnyTime-mon5-btn ui-state-default ui-state-highlight">Fri\
-								</li>\
-								<li class="AnyTime-btn AnyTime-mon-btn AnyTime-mon6-btn ui-state-default">Sat\
-								</li>\
-								<li class="AnyTime-btn AnyTime-mon-btn AnyTime-mon7-btn ui-state-default">Sun\
-								</li>\
-								<li class="AnyTime-btn AnyTime-mon-btn AnyTime-mon12-btn ui-state-default ui-state-disabled">\
-								</li>\
-								<li class="AnyTime-btn AnyTime-mon-btn AnyTime-mon12-btn ui-state-default ui-state-disabled">\
-								</li>\
-								<li class="AnyTime-btn AnyTime-mon-btn AnyTime-mon12-btn ui-state-default ui-state-disabled">\
-								</li>\
-								<li class="AnyTime-btn AnyTime-mon-btn AnyTime-mon12-btn ui-state-default ui-state-disabled">\
-								</li>\
-								<li id="weekdays-all" active="true" class="AnyTime-btn AnyTime-mon-btn AnyTime-mon12-btn ui-state-default ui-state-disabled">All\
-								</li>\
-							</ul>\
+					<div class="leftbox"> \
+						<h6 class="subtitle" >Months</h6>\
+						<div id="months" class="block">\
+							<div type="wildcard" state="none">None</div>\
+							<br style="clear:both" />\
 						</div>\
 \
-						<div style="width: 141px; height: 241px;" class="AnyTime-time">\
-							<h6 class="AnyTime-lbl AnyTime-lbl-month" style="text-align: left">Hours</h6>\
-							<div id="slider" class="ui-widget ui-widget-content ui-corner-all" style="height: 190px; top: 8px; left: 7px; border: 1px solid #aaa;">\
-							</div>\
+						<h6 class="subtitle">Days of Month</h6>\
+						<div id="monthdays" class="block">\
+							<div class="ui-state-disabled">&nbsp;</div>\
+							<div class="ui-state-disabled">&nbsp;</div>\
+							<div class="ui-state-disabled">&nbsp;</div>\
+							<div class="ui-state-disabled">&nbsp;</div>\
+							<div type="wildcard" state="none">None</div>\
+							<br style="clear:both" />\
+						</div>\
 \
-				</div>\
+						<h6 class="subtitle">Days of week</h6>\
+            <div id="weekdays" class="block">\
+							<div class="ui-state-disabled">&nbsp;</div>\
+							<div class="ui-state-disabled">&nbsp;</div>\
+							<div class="ui-state-disabled">&nbsp;</div>\
+							<div class="ui-state-disabled">&nbsp;</div>\
+							<div type="wildcard" state="none">None</div>\
+							<br style="clear:both" />\
+						</div>\
+					</div>\
+\
+					<div class="rightbox">\
+						<h6 class="subtitle hours">Hours</h6>\
+						<div id="slider" class="ui-widget ui-widget-content ui-corner-all"></div>\
+					</div>\
+\				</div>\
 			</div>'
 
 	});

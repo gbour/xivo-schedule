@@ -1,0 +1,17 @@
+
+input#schedule {
+	font-family: Times, serif;
+	font-style: italic;
+	font-size: .6em;
+
+	width: 270px;
+	height: 4px;
+}
+
+label {
+	float: left;
+	width: 100px;
+	font-family: Times, serif;
+	font-style: italic;
+	font-size: .9em;
+}

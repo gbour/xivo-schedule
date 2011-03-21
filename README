@@ -1,0 +1,63 @@
+													-:| xivo-schedule jQuery widget |:-
+
+
+ABOUT
+	*xivo-schedule* is a jQuery widget used to set/display schedules in a user friendly manner
+
+	A schedule is a set of datetime intervals:
+		- months
+		- days of month
+		- days of week
+		- hours in the day
+
+	The resulting schedule is made of the intersection of all those intervals
+
+	NOTE: jquery-ui themes applies on xivo-schedule, so you can easily change colors by
+				importing different css theme file
+
+REQUIREMENTS
+	. jquery (>= 1.5)
+	. jquery-ui (>= 1.8)
+	. jquery.mousewheel (FACULTATIVE. http://brandonaaron.net/code/mousewheel/docs)
+
+
+USAGE
+	. include requirements .js and .css files
+		<link type="text/css" href="jquery/css/ui-lightness/jquery-ui-1.8.10.custom.css" rel="stylesheet" />  
+		<link type="text/css" href="../src/xivo.schedule.css" rel="stylesheet" /> 
+		<script type="text/javascript" src="jquery/jquery-1.5.1.min.js"></script>
+		<script type="text/javascript" src="jquery/jquery-ui-1.8.10.min.js"></script>
+		<script src="jquery/jquery.mousewheel.min.js"></script>
+
+	. include xivo-schedule .js and desired .js langpacks
+		<script type="text/javascript" src="../src/xivo.schedule.js"></script>
+		<script type="text/javascript" src="../src/xivo.schedule-fr.js"></script>
+
+	. initialize xivo-schedule widget (MUST be attached to a input field) with following options:
+		- language (default to *english*)
+		- inputs: input fields setted with schedule numerical values (one field per interval type)
+		- default value
+
+				$('#schedule').schedule({
+					'language': 'fr',
+					'inputs': {
+						'months'   : $('#sched-months'),
+						'monthdays': $('#sched-monthdays'),
+						'weekdays' : $('#sched-weekdays'),
+						'hours'    : $('#sched-hours')
+					},
+					defaults: {
+						'months'   : '1,3-6,11,12',
+						'monthdays': '1-15,21',
+						'weekdays' : '1,4-6',
+						'hours'    : '08:35-17:30'
+					}
+				});
+		
+
+
+	see demo/schedule.html for a complete sample
+
+	
+AUTHORS
+  . Guillaume Bour <gbour@proformatique.com>

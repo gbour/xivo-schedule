@@ -16,9 +16,91 @@
  */
 
 .schedule {
-	background-image:url("/img/jquery/calendar.png");
+	background-image:url("calendar.png");
 	background-position:right top;
 	background-repeat:no-repeat;
 
-	min-height: 14px;
+	min-height: 11px;
+}
+
+.schedulebox {
+	position: absolute;
+	width: 270px;
+	font-size: .8em;
+}
+
+.schedulebox .mainbox {
+	width: 600px;
+}
+
+.schedulebox .leftbox {
+	float : left;
+	width : 188px;
+	margin-left: 2px;
+}
+
+.schedulebox .rightbox {
+	float : left;
+	width : 141px;
+
+	margin-left: 10px;
+}
+
+.schedulebox h6.subtitle {
+	text-align: center;
+	font-style: italic;
+
+	margin: 4px 0px 1px 0px;
+}
+
+.schedulebox div.block {
+	margin-bottom: 10px;
+	margin-top: 0px;
+}
+
+
+.schedulebox div.block div {
+	border: 1px solid grey;
+	float: left;
+	margin: .5px;
+	padding: 1px 0px;
+	border-radius: 3px;
+
+	background-color: lightgrey;
+	width: 24px;
+	width: 28px;
+	text-align: center;
+	font-size: .75em;
+
+	cursor: pointer;
+}
+
+.schedulebox .clear {
+	clear: both;
+}
+
+.schedulebox .rightbox > .hours {
+	text-align: left;
+}
+
+.schedulebox #slider {
+	top: 3px;
+	left: 14px;
+	border: 1px solid #aaa;
+
+	height: 223px;
+	width: 4px;
+}
+
+.schedulebox #slider a {
+	width: 10px;
+	height: 10px;
+}
+
+.schedulebox #slider span {
+	position: relative;
+	left: 15px;
+	top: -4px;
+	font-size: .7em;
+	padding: 1.5px 1.5px 0px 1.5px;
 }

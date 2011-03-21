@@ -30,7 +30,7 @@ jQuery(function($){
 			'dAbbr': ['Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.', 'Dim.'],
 			'mAbbr': ['Janv.','Févr.','Mars','Avril','Mai','Juin', 'Juil.','Août','Sept.','Oct.','Nov.','Déc.'],
 
-			'fullText': ['De ', 'à', 'les ', 'au']
+			'fullText': ['De ', 'à', 'les ', 'au', 'Aucun jours de la semaine']
   	}
 	});
 });
