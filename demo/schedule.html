@@ -17,9 +17,11 @@
 		<script type="text/javascript" src="../src/xivo.schedule.js"></script>
 		<script type="text/javascript" src="../src/xivo.schedule-fr.js"></script>
 		<script type="text/javascript">
+			var picker = null;
+
 			$(function(){
-				$('#schedule').schedule({
-					'language': 'fr',
+				picker = $('#schedule').schedule({
+					'language': 'en',
 					'inputs': {
 						'months'   : $('#sched-months'),
 						'monthdays': $('#sched-monthdays'),
@@ -34,6 +36,10 @@
 					}
 				});
 			});
+
+			// allows to modify schedule programatically
+			// e.g. picker.schedule("setValue", "months", "1-3");
+			// e.g. picker.schedule("setValue", "hours", "08:00-17:00");
 		</script>
 
 	</head>

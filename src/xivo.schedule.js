@@ -317,7 +317,7 @@
 		},
 
 		_fieldInit: function(item) {
-			if(this.options['inputs'][item] == null) 
+			if(this.options['inputs'][item] == null)
 				return;
 
 			var value = this.options['inputs'][item].attr('value');
@@ -326,6 +326,18 @@
 			if(value.length == 0)
 				return;
 
+			this._updateWidget(item, value);
+		},
+
+		/* Public method to set the values.
+		 *  . item: either months, monthdays, weekdays or hours
+		 *  . value: range
+		 */
+		setValue: function(item, value){
+			this._updateWidget(item, value);
+		},
+
+		_updateWidget: function(item, value){
 			// split rules: a-b,c => [a,..,b,c,..,d]
 			//              a:b-c:d => [(a,b),(c,d)]      (hours)
 			if(item == 'hours')	{
@@ -370,10 +382,8 @@
 
 				this.node.find('#'+item).children('[type="wildcard"]').html(this._i18n[wildcard]).attr('state',wildcard);
 			}
-
 			this.onChange(item);
 		},
-
 
 		_l10n: {'en': {
 			'title'    : 'Schedule',
