@@ -38,7 +38,7 @@
 
 		sliderOptions: {
 			orientation: 'vertical',
-			step: 1,
+			step: 5,
 			min: 0,
 			max: 1439, //24*60
 			range: true,
@@ -314,6 +314,7 @@
 
 			// will depend of the type of the element
 			this.element.html(txt).attr('value', txt);
+			this._trigger("changed", null, {'name': item, 'txt': txt});
 		},
 
 		_fieldInit: function(item) {
@@ -327,6 +328,14 @@
 				return;
 
 			this._updateWidget(item, value);
+		},
+
+		/*
+		 * Load values from form
+		 */
+		loadValueFromForm: function(){
+			for(var i in this.options['inputs'])
+				this._fieldInit(i);
 		},
 
 		/* Public method to set the values.
