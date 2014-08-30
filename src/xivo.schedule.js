@@ -38,7 +38,7 @@
 
 		sliderOptions: {
 			orientation: 'vertical',
-			step: 1,
+			step: 5,
 			min: 0,
 			max: 1439, //24*60
 			range: true,
@@ -61,14 +61,14 @@
 				this._fieldInit(i);
 
 			var _this = this;
-			this.element.bind('click', function() { 
+			this.element.bind('click', function() {
 				/* we hide all pickers but ours */
 				$('.ui-datepicker').each(function(idx, elt) {
 					if(elt != _this.node[0])
 						$(elt).hide();
 				});
 
-				_this.node.toggle(); 
+				_this.node.toggle();
 				//WARNING: setting offset position ONLY works when element is visible !!!
 				if($(_this.node).is(':visible'))	{
 					offset 				  = _this.element.offset();
@@ -77,7 +77,7 @@
 				}
 			});
 
-			
+
 			// on title bar
 			this.node.children().first().bind('click', function() { _this.node.hide(); });
 			//this.node.toggle()
@@ -115,8 +115,8 @@
 			for(var i = 0; i < 12; i++) {
 				var item = $('<div type="data">' + this._i18n['mAbbr'][i] + '</div>');
 
-				item.click(function() { 
-					$(this).toggleClass('ui-state-highlight'); 
+				item.click(function() {
+					$(this).toggleClass('ui-state-highlight');
 					widget.onChange('months');
 				});
 
@@ -139,14 +139,14 @@
 				state = state=='none'?'all':'none';
 				$(this).attr('state', state).html(widget._i18n[state]);
 				widget.onChange('monthdays');
-			}); 
+			});
 
 			var block = mdays.children().first()
 			for(var i = 1; i < 32; i++) {
 				var item = $('<div type="data">' + i + '</div>');
-				
-				item.click(function() { 
-					$(this).toggleClass('ui-state-highlight'); 
+
+				item.click(function() {
+					$(this).toggleClass('ui-state-highlight');
 					widget.onChange('monthdays');
 				});
 
@@ -169,14 +169,14 @@
 				state = state=='none'?'all':'none';
 				$(this).attr('state', state).html(widget._i18n[state]);
 				widget.onChange('weekdays');
-			}); 
+			});
 
 			var block = wdays.children().first();
 			for(var i = 0; i < 7; i++) {
 				item = $('<div type="data">' + this._i18n['dAbbr'][i] + '</div>')
 
-				item.click(function() { 
-					$(this).toggleClass('ui-state-highlight'); 
+				item.click(function() {
+					$(this).toggleClass('ui-state-highlight');
 					widget.onChange('weekdays');
 				});
 
@@ -243,7 +243,7 @@
 		 *  . raw value
 		 * */
 		onChange: function(item) {
-			if(this.options['inputs'][item] == null) 
+			if(this.options['inputs'][item] == null)
 				return;
 
 			_clbk1 = function(elts) {
@@ -265,8 +265,8 @@
 				if(start == idx-1)
 					value += ',' + start;
 				else if(start != null)
-					value += ',' + start + '-' + idx; 
-					
+					value += ',' + start + '-' + idx;
+
 				value = value.substring(1);
 				return value;
 			};
@@ -274,7 +274,7 @@
 			// hours special callback
 			var node = this.node;
 			_clbk2 = function() {
-				return node.find('#range-start').attr('iso-hour') + '-' + 
+				return node.find('#range-start').attr('iso-hour') + '-' +
 							 node.find('#range-end').attr('iso-hour');
 			};
 
@@ -314,10 +314,11 @@
 
 			// will depend of the type of the element
 			this.element.html(txt).attr('value', txt);
+			this._trigger("changed", null, {'name': item, 'txt': txt});
 		},
 
 		_fieldInit: function(item) {
-			if(this.options['inputs'][item] == null) 
+			if(this.options['inputs'][item] == null)
 				return;
 
 			var value = this.options['inputs'][item].attr('value');
@@ -326,6 +327,26 @@
 			if(value.length == 0)
 				return;
 
+			this._updateWidget(item, value);
+		},
+
+		/*
+		 * Load values from form
+		 */
+		loadValueFromForm: function(){
+			for(var i in this.options['inputs'])
+				this._fieldInit(i);
+		},
+
+		/* Public method to set the values.
+		 *  . item: either months, monthdays, weekdays or hours
+		 *  . value: range
+		 */
+		setValue: function(item, value){
+			this._updateWidget(item, value);
+		},
+
+		_updateWidget: function(item, value){
 			// split rules: a-b,c => [a,..,b,c,..,d]
 			//              a:b-c:d => [(a,b),(c,d)]      (hours)
 			if(item == 'hours')	{
@@ -370,10 +391,8 @@
 
 				this.node.find('#'+item).children('[type="wildcard"]').html(this._i18n[wildcard]).attr('state',wildcard);
 			}
-
 			this.onChange(item);
 		},
-
 
 		_l10n: {'en': {
 			'title'    : 'Schedule',
@@ -386,7 +405,7 @@
 
 			'dAbbr': ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
 			'mAbbr': ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-			
+
 			'fullText': ['', 'to', '', 'to', 'No week days']
 		}},
 
